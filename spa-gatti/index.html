@@ -1,0 +1,94 @@
+<html>
+    <head>
+        <title>SPA gatti casuali</title>
+
+        <!-- CSS -->
+        <style>
+            body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                margin: 0;
+                gap: 16px;
+            }
+
+            #gatto-casuale {
+                height: 700px;
+                width: auto;
+                object-fit: cover;
+                border-radius: 8px;
+            }
+
+            #btn-ricarica, #btn-salva {
+                padding: 10px 20px;
+                font-size: 16px;
+                cursor: pointer;
+                border: none;
+                border-radius: 6px;
+                background-color: #007bff;
+                color: white;
+            }
+
+            #btn-salva {
+                background-color: #28a745;
+            }
+
+            #galleria {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center;
+            }
+
+            #galleria img {
+                height: 200px;
+                border-radius: 6px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <!-- HTML -->
+        <img id="gatto-casuale" src="" alt="">
+
+        <div>
+            <button id="btn-ricarica">Nuovo gatto</button>
+            <button id="btn-salva">Salva foto</button>
+        </div>
+
+        <div id="galleria"></div>
+        
+        <!-- JavaScript -->
+        <script>
+            const imgGattoCasuale = document.getElementById("gatto-casuale");
+            const btnRicarica = document.getElementById("btn-ricarica");
+            const btnSalva = document.getElementById("btn-salva");
+            const galleria = document.getElementById("galleria");
+
+            async function getRandomCat() {
+                const url = "https://cataas.com/cat?json=true";
+                const response = await fetch(url);
+                if (response.ok) {
+                    const body = await response.json();
+                    // Se l'URL inizia già con http/https lo usa direttamente, altrimenti aggiunge il dominio
+                    imgGattoCasuale.src = body.url.startsWith("http") ? body.url : "https://cataas.com" + body.url;
+                }
+            }
+
+            function salvaGatto() {
+                if (imgGattoCasuale.src) {
+                    const nuovaFoto = document.createElement("img");
+                    nuovaFoto.src = imgGattoCasuale.src;
+                    galleria.appendChild(nuovaFoto);
+                }
+            }
+
+            btnRicarica.addEventListener("click", getRandomCat);
+            btnSalva.addEventListener("click", salvaGatto);
+
+            getRandomCat();
+        </script>
+    </body>
+</html>
